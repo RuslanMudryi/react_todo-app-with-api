@@ -56,16 +56,14 @@ export const TodoHeader: React.FC<Props> = ({
     try {
       await addNewTodo();
       changeQuery('');
-    } catch (err) {}
-
-    setDisabledSearchInput(false);
-    searchInput.current?.focus();
+    } finally {
+      setDisabledSearchInput(false);
+      searchInput.current?.focus();
+    }
   };
 
-  const ToggleAllHandler = async () => {
-    try {
-      await updateCompletedAllToDo();
-    } catch (err) {}
+  const toggleAllHandler = async () => {
+    await updateCompletedAllToDo();
   };
 
   return (
@@ -77,7 +75,7 @@ export const TodoHeader: React.FC<Props> = ({
             active: isActiveTodos,
           })}
           data-cy="ToggleAllButton"
-          onClick={ToggleAllHandler}
+          onClick={toggleAllHandler}
         />
       )}
 

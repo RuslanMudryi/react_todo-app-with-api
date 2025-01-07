@@ -83,9 +83,11 @@ export const App: React.FC = () => {
 
   const addNewTodo = async () => {
     try {
+      const trimmedTodoTitle = todoQuery.trim();
+
       setLoadTodo({
         id: 0,
-        title: todoQuery.trim(),
+        title: trimmedTodoTitle,
         userId: USER_ID,
         completed: false,
       });
