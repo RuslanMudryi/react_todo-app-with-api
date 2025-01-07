@@ -56,10 +56,10 @@ export const TodoHeader: React.FC<Props> = ({
     try {
       await addNewTodo();
       changeQuery('');
-    } finally {
-      setDisabledSearchInput(false);
-      searchInput.current?.focus();
-    }
+    } catch (err) {}
+
+    setDisabledSearchInput(false);
+    searchInput.current?.focus();
   };
 
   const toggleAllHandler = async () => {
