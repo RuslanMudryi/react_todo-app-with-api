@@ -1,8 +1,8 @@
-import { Todo, TodoCoponent } from '../types/Todo';
+import { Todo } from '../types/Todo';
 import { TodoComponent } from './TodoComponent';
 
 type Props = {
-  filteredTodos: TodoCoponent[];
+  filteredTodos: Todo[];
   onRemoveTodo: (id: number) => void;
   onUpdateTodo: (todo: Todo) => Promise<Todo>;
 };

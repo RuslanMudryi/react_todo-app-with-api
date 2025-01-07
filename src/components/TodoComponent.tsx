@@ -31,13 +31,14 @@ export const TodoComponent: React.FC<Props> = ({
 
     try {
       setIsToLoad(true);
+      const trimmedTodoTitle = todoTitle.trim();
 
-      if (todoTitle.trim() === '') {
+      if (trimmedTodoTitle === '') {
         await onRemoveTodo(todo.id);
       } else {
         const newTodo = await onUpdateTodo({
           ...todo,
-          title: todoTitle.trim(),
+          title: trimmedTodoTitle,
         });
 
         setTodoTitle(newTodo.title);
@@ -85,6 +86,25 @@ export const TodoComponent: React.FC<Props> = ({
     setIsCompleted(todo.completed);
   }, [todo.completed]);
 
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await saveChangesHandler();
+  };
+
+  const onRemoveButtonClickHandler = async () => {
+    try {
+      setIsToLoad(true);
+      await onRemoveTodo(todo.id);
+    } catch (err) {
+    } finally {
+      setIsToLoad(false);
+    }
+  };
+
+  const onDoubleClickHandler = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div
       key={todo.id}
@@ -109,9 +129,7 @@ export const TodoComponent: React.FC<Props> = ({
           <span
             data-cy="TodoTitle"
             className="todo__title"
-            onDoubleClick={() => {
-              setIsEditing(true);
-            }}
+            onDoubleClick={onDoubleClickHandler}
           >
             {todoTitle}
           </span>
@@ -119,26 +137,13 @@ export const TodoComponent: React.FC<Props> = ({
             type="button"
             className="todo__remove"
             data-cy="TodoDelete"
-            onClick={async () => {
-              try {
-                setIsToLoad(true);
-                await onRemoveTodo(todo.id);
-              } catch (err) {
-              } finally {
-                setIsToLoad(false);
-              }
-            }}
+            onClick={onRemoveButtonClickHandler}
           >
             ×
           </button>
         </>
       ) : (
-        <form
-          onSubmit={async e => {
-            e.preventDefault();
-            await saveChangesHandler();
-          }}
-        >
+        <form onSubmit={onSubmitHandler}>
           <input
             data-cy="TodoTitleField"
             type="text"
@@ -148,9 +153,7 @@ export const TodoComponent: React.FC<Props> = ({
               setTodoTitle(e.target.value);
             }}
             className="todo__title-field"
-            onBlur={async () => {
-              await saveChangesHandler();
-            }}
+            onBlur={saveChangesHandler}
             autoFocus
           />
         </form>
